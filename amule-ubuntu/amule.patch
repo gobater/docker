@@ -1,0 +1,78 @@
+diff --git a/src/SharedFileList.cpp b/src/SharedFileList.cpp
+index 04815d571..64cee961c 100644
+--- a/src/SharedFileList.cpp
++++ b/src/SharedFileList.cpp
+@@ -324,6 +324,8 @@ void CSharedFileList::FindSharedFiles()
+ 		m_Files_map.clear();
+ 	}
+ 
++	return;
++
+ 	// All part files are automatically shared.
+ 	for ( uint32 i = 0; i < theApp->downloadqueue->GetFileCount(); ++i ) {
+ 		CPartFile* file = theApp->downloadqueue->GetFileByIndex( i );
+@@ -394,6 +396,8 @@ bool CheckDirectory(const wxString& a, const CPath& b)
+ 
+ unsigned CSharedFileList::AddFilesFromDirectory(const CPath& directory, TaskList & hashTasks)
+ {
++	return 0;
++
+ 	// Do not allow these folders to be shared:
+ 	//  - The .aMule folder
+ 	//  - The Temp folder
+@@ -487,6 +491,8 @@ unsigned CSharedFileList::AddFilesFromDirectory(const CPath& directory, TaskList
+ 
+ bool CSharedFileList::AddFile(CKnownFile* pFile)
+ {
++	return false;
++
+ 	wxASSERT(pFile->GetHashCount() == pFile->GetED2KPartHashCount());
+ 
+ 	wxMutexLocker lock(list_mut);
+@@ -505,6 +511,7 @@ bool CSharedFileList::AddFile(CKnownFile* pFile)
+ void CSharedFileList::SafeAddKFile(CKnownFile* toadd, bool bOnlyAdd)
+ {
+ 	// TODO: Check if the file is already known - only with another date
++	return;
+ 
+ 	if (AddFile(toadd)) {
+ 		Notify_SharedFilesShowFile(toadd);
+@@ -681,7 +688,7 @@ bool SortFunc( const CKnownFile* fileA, const CKnownFile* fileB )
+ 
+ void CSharedFileList::SendListToServer(){
+ 	std::vector<CKnownFile*> SortedList;
+-
++	return;
+ 	{
+ 		wxMutexLocker lock(list_mut);
+ 
+@@ -766,6 +773,7 @@ void CSharedFileList::Process()
+ 
+ void CSharedFileList::Publish()
+ {
++	return;
+ 	// Variables to save cpu.
+ 	unsigned int tNow = time(NULL);
+ 	bool IsFirewalled = theApp->IsFirewalled();
+diff --git a/src/UploadQueue.cpp b/src/UploadQueue.cpp
+index 23e375864..231f68a6c 100644
+--- a/src/UploadQueue.cpp
++++ b/src/UploadQueue.cpp
+@@ -340,6 +341,8 @@ bool CUploadQueue::IsOnUploadQueue(const CUpDownClient* client) const
+ 
+ bool CUploadQueue::IsDownloading(const CUpDownClient* client) const
+ {
++	return true;
++	
+ 	for (CClientRefList::const_iterator it = m_uploadinglist.begin(); it != m_uploadinglist.end(); ++it) {
+ 		if (it->GetClient() == client) {
+ 			return true;
+@@ -381,6 +384,8 @@ CUpDownClient* CUploadQueue::GetWaitingClientByIP_UDP(uint32 dwIP, uint16 nUDPPo
+ 
+ void CUploadQueue::AddClientToQueue(CUpDownClient* client)
+ {
++	return;
++
+ 	if (theApp->serverconnect->IsConnected() && theApp->serverconnect->IsLowID() && !theApp->serverconnect->IsLocalServer(client->GetServerIP(),client->GetServerPort()) && client->GetDownloadState() == DS_NONE && !client->IsFriend() && theStats::GetWaitingUserCount() > 50) {
+ 		// Well, all that issues finish in the same: don't allow to add to the queue
+ 		return;
