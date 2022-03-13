@@ -11,10 +11,10 @@ COPY amule.patch /amule.patch
 RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list \
     && apt-get update \
     && apt-get install --no-install-recommends --yes \
-	devscripts \
-	equivs \
-	autoconf automake \
-	git ca-certificates \
+    devscripts \
+    equivs \
+    autoconf automake \
+    git ca-certificates \
     amule-daemon \
     pwgen \
     && mk-build-deps amule --install --root-cmd sudo --remove --tool='apt-get -qqy -o Debug::pkgProblemResolver=yes --no-install-recommends' \
@@ -45,7 +45,7 @@ RUN sed -i '/deb-src/s/^# //' /etc/apt/sources.list \
         --enable-geoip \
         --enable-mmap \
         --enable-optimize \
-        --enable-upnp \
+        --disable-upnp \
         --disable-debug \
     && make \
     && make install \

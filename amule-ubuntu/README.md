@@ -35,12 +35,20 @@ It is important that the UID and GID map to a user in your Linux machine which h
 - 47657/tcp
 
 ### Web Server Password
-You can setup the password via an environment variable, if you don't do that, the startup script will create a new password for you and will write it to the console if you started in interactive mode (-i)
+You can setup the password via an environment variable (_WEBUI_PWD_), if you don't do that, the startup script will create a new password for you and will write it to the console if you started in interactive mode (-i)
 
-Creating a container:
+### Remote GUI Password
+You can setup the password via an environment variable (_RGUI_PWD_), if you don't do that, the startup script will create a new password for you and will write it to the console if you started in interactive mode (-i)
+
+
+## Testing the image:
 <pre>
-docker create --name amule -ePUID=[UID] -ePGID=[GID] -eWEBUI_PWD=[PASSWORD] -p4711:4711 -p4712:4712 -p47660:47660/udp -p52718:52718/udp -p47657:47657 -v/mnt/host/aMule/Temp:/temp -v/mnt/host/aMule/Incoming:/incoming -v/mnt/host/aMule/config:/config amule-amd64:2.3.2
+docker run --rm [-ePUID=UID] [-ePGID=GID] -eRGUI_PWD=[PASSWORD] -eWEBUI_PWD=[PASSWORD] -p4711:4711 -p4712:4712 -p47660:47660/udp -p52718:52718/udp -p47657:47657 -v/mnt/host/aMule/Temp:/temp -v/mnt/host/aMule/Incoming:/incoming -v/mnt/host/aMule/config:/config amule-amd64:2.3.2
 </pre>
 
+## Creating a container:
+<pre>
+docker create --name amule [-ePUID=UID] [-ePGID=GID] -eRGUI_PWD=[PASSWORD] -eWEBUI_PWD=[PASSWORD] -p4711:4711 -p4712:4712 -p47660:47660/udp -p52718:52718/udp -p47657:47657 -v/mnt/host/aMule/Temp:/temp -v/mnt/host/aMule/Incoming:/incoming -v/mnt/host/aMule/config:/config amule-amd64:2.3.2
+</pre>
 
 ## Do you like this Docker image ?

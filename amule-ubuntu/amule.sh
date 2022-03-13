@@ -166,7 +166,7 @@ UseSrcSeeds=0
 AcceptExternalConnections=1
 ECAddress=
 ECPort=4712
-ECPassword=${AMULE_GUI_ENCODED_PWD}
+ECPassword=
 UPnPECEnabled=0
 ShowProgressBar=1
 ShowPercent=1
@@ -176,14 +176,14 @@ IpFilterServers=1
 TransmitOnlyUploadingClients=0
 [WebServer]
 Enabled=1
-Password=${AMULE_WEBUI_ENCODED_PWD}
+Password=
 PasswordLow=
 Port=4711
 WebUPnPTCPPort=50001
 UPnPWebServerEnabled=0
 UseGzip=1
-UseLowRightsUser=0
-PageRefreshTime=120
+UseLowRightsUser=1
+PageRefreshTime=30
 Template=AmuleWebUI-Reloaded
 Path=amuleweb
 [GUI]
@@ -226,19 +226,19 @@ GUICommand=
 [HTTPDownload]
 URL_1=http://upd.emule-security.org/ipfilter.zip 
 EOM
-    echo "${AMULE_CONF} successfullly generated."
+    echo "${AMULE_CONF} successfully generated."
 else
     echo "${AMULE_CONF} file found. Using existing configuration."
 fi
 
 if [ ! -f ${REMOTE_CONF} ]; then
-    if [[ -z "${GUI_PWD}" ]]; then
-        AMULE_GUI_PWD=$(pwgen -s 64)
-        echo "No GUI password specified, using generated one: ${AMULE_GUI_PWD}"
+    if [[ -z "${RGUI_PWD}" ]]; then
+        AMULE_RGUI_PWD=$(pwgen -s 64)
+        echo "No GUI password specified, using generated one: ${AMULE_RGUI_PWD}"
     else
-        AMULE_GUI_PWD="${GUI_PWD}"
+        AMULE_RGUI_PWD="${RGUI_PWD}"
     fi
-    AMULE_GUI_ENCODED_PWD=$(echo -n "${AMULE_GUI_PWD}" | md5sum | cut -d ' ' -f 1)
+    AMULE_GUI_ENCODED_PWD=$(echo -n "${AMULE_RGUI_PWD}" | md5sum | cut -d ' ' -f 1)
     
     if [[ -z "${WEBUI_PWD}" ]]; then
         AMULE_WEBUI_PWD=$(pwgen -s 64)
@@ -266,9 +266,20 @@ AllowGuest=0
 AdminPassword=${AMULE_WEBUI_ENCODED_PWD}
 GuestPassword=
 EOM
-    echo "${REMOTE_CONF} successfullly generated."
+    echo "${REMOTE_CONF} successfully generated."
 else
     echo "${REMOTE_CONF} file found. Using existing configuration."
+
+    # Read passwords from existing file
+    AMULE_GUI_ENCODED_PWD=`cat ${REMOTE_CONF} | grep -e "^Password=" | cut -f 2 -d =`
+    AMULE_WEBUI_ENCODED_PWD=`cat ${REMOTE_CONF} | grep -e "^AdminPassword=" | cut -f 2 -d =`
 fi
+
+#Ensure both passwords match...
+sed -i -e "s/ECPassword=.*/ECPassword=${AMULE_GUI_ENCODED_PWD}/g" ${AMULE_CONF}
+sed -i -e "s/Password=.*/Password=${AMULE_WEBUI_ENCODED_PWD}/g" ${AMULE_CONF}
+
+#Ensure config files are owned by amule user
+chown ${AMULE_UID}:${AMULE_GID} --recursive ${AMULE_HOME}
 
 sudo -H -u '#'${AMULE_UID} sh -c "amuled -c ${AMULE_HOME} -o"

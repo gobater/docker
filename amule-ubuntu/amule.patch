@@ -1,5 +1,5 @@
 diff --git a/src/SharedFileList.cpp b/src/SharedFileList.cpp
-index 04815d571..64cee961c 100644
+index 04815d5..64cee96 100644
 --- a/src/SharedFileList.cpp
 +++ b/src/SharedFileList.cpp
 @@ -324,6 +324,8 @@ void CSharedFileList::FindSharedFiles()
@@ -55,10 +55,10 @@ index 04815d571..64cee961c 100644
  	unsigned int tNow = time(NULL);
  	bool IsFirewalled = theApp->IsFirewalled();
 diff --git a/src/UploadQueue.cpp b/src/UploadQueue.cpp
-index 23e375864..231f68a6c 100644
+index 23e3758..0b4b6f3 100644
 --- a/src/UploadQueue.cpp
 +++ b/src/UploadQueue.cpp
-@@ -340,6 +341,8 @@ bool CUploadQueue::IsOnUploadQueue(const CUpDownClient* client) const
+@@ -340,6 +340,8 @@ bool CUploadQueue::IsOnUploadQueue(const CUpDownClient* client) const
  
  bool CUploadQueue::IsDownloading(const CUpDownClient* client) const
  {
@@ -67,7 +67,7 @@ index 23e375864..231f68a6c 100644
  	for (CClientRefList::const_iterator it = m_uploadinglist.begin(); it != m_uploadinglist.end(); ++it) {
  		if (it->GetClient() == client) {
  			return true;
-@@ -381,6 +384,8 @@ CUpDownClient* CUploadQueue::GetWaitingClientByIP_UDP(uint32 dwIP, uint16 nUDPPo
+@@ -381,6 +383,8 @@ CUpDownClient* CUploadQueue::GetWaitingClientByIP_UDP(uint32 dwIP, uint16 nUDPPo
  
  void CUploadQueue::AddClientToQueue(CUpDownClient* client)
  {
