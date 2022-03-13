@@ -62,19 +62,19 @@ RUN apt-get update \
     && apt-get install --yes --no-install-recommends git ca-certificates \
     && cd /usr/share/amule/webserver \
     && git clone https://github.com/MatteoRagni/AmuleWebUI-Reloaded \
-    && rm -rf .git AmuleWebUI-Reloaded/doc-images \
+    && rm -rf AmuleWebUI-Reloaded/doc-images AmuleWebUI-Reloaded/.git \
     && apt-get remove --yes git ca-certificates && apt-get autoremove --yes \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 # Add startup script
-COPY amule.sh /docker_entrypoint.sh
+COPY amule.sh /home/amule/amule.sh
 
 # Final cleanup
-RUN chmod a+x /docker_entrypoint.sh 
+RUN chmod a+x /home/amule/amule.sh 
 
 VOLUME ["/config", "/incoming", "/temp" ]
 
 EXPOSE 4711/tcp 4712/tcp 47660/udp 52718/udp 47657/tcp
 
-ENTRYPOINT ["/docker_entrypoint.sh"]
+ENTRYPOINT ["/home/amule/amule.sh"]
